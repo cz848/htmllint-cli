@@ -92,15 +92,21 @@ app.launch({
         return;
     }
 
-    if (!env.configPath) {
+var cfg;
+
+    if (env.configPath) {
+        cfg = cjson.load(env.configPath);
+    }else{
+        cfg = cjson.load('package.json').htmllint;
+    }
+
+    if (!cfg) {
         console.log(
-            chalk.red('local .htmllintrc file not found'),
+            chalk.red('No configuration found (local .htmllintrc file not found and no htmllint config in package.json)'),
             '(you can create one using "htmllint init")'
         );
         process.exit(1);
     }
-
-    var cfg = cjson.load(env.configPath);
 
     htmllint.use(cfg.plugins || []);
     delete cfg.plugins;
